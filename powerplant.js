@@ -59,7 +59,8 @@ PowerPlant.prototype = {
   },
 
   addHeader: function addHeader(){
-
+      this.html += "<div><h1>" + this.data.character + "</h1><h2>Level " + this.data.level + " " + this.data.class + "</h2></div>";
+      this.html += "<div class=\'clear\'></div>";
   },
 
   addDocumentHead: function addDocumentHead(){
