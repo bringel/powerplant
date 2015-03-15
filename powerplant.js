@@ -36,7 +36,7 @@ nomnom.options({
     flag: true,
     help: "call with --hide-header to disable generation of the character header at the top of the page"
   }
-});
+}).script("powerplant");
 
 function PowerPlant(format, input, output, hideFeats, hideHeader){
   this.data = input;
