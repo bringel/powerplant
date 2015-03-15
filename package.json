@@ -1,0 +1,25 @@
+{
+  "name": "powerplant",
+  "version": "0.1.0",
+  "description": "A D&D 4e Power Card generator",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bringel/powerplant.git"
+  },
+  "author": "Brad Ringel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bringel/powerplant/issues"
+  },
+  "homepage": "https://github.com/bringel/powerplant",
+  "bin": {
+    "powerplant": "powerplant.js"
+  },
+  "preferGlobal": true,
+  "dependencies": {
+    "nomnom": "^1.8.1"
+  }
+}
