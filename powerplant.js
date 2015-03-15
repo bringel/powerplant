@@ -2,6 +2,7 @@
 
 var nomnom = require("nomnom");
 var fs = require("fs");
+var pdf = require("html-pdf");
 
 nomnom.options({
   inputFile: {
@@ -22,13 +23,27 @@ nomnom.options({
     full: "format",
     default: "html",
     help: "Format to output the power cards in, either \'html\' or \'pdf\'"
+  },
+  hideFeats: {
+    full: "hide-feats",
+    default: false,
+    flag: true,
+    help: "call with --hide-feats to disable generation of feats at the end of the page"
+  },
+  hideHeader: {
+    full: "hide-header",
+    default: false,
+    flag: true,
+    help: "call with --hide-header to disable generation of the character header at the top of the page"
   }
 });
 
-function PowerPlant(format, input, output){
+function PowerPlant(format, input, output, hideFeats, hideHeader){
   this.data = input;
   this.format = format;
   this.outputFile = output;
+  this.hideFeats = hideFeats;
+  this.hideHeader = hideHeader;
 }
 
 PowerPlant.prototype = {
@@ -37,11 +52,13 @@ PowerPlant.prototype = {
   html: "<!DOCTYPE html><html>",
   data: null,
   typeToClass : { "At-Will" : "atWill", "Encounter" : "encounter", "Daily" : "daily", "Utility" : "utility" },
+  hideHeader: false,
+  hideFeats: false,
   buildCss : function buildCss(){
     var css = "";
     css += "body { font-family: Helvetica, sans-serif; font-size: 14px;}";
     css += ".card { width: 300px; height: 350px; display: inline-block; float: left; margin: 1px; page-break-inside: avoid;}";
-    css += ".cardHeader { color: #FFFFFF; padding-left: 5px; padding-right: 5px; font-size: 16px;}";
+    css += ".cardHeader { color: #FFFFFF; padding-left: 5px; padding-right: 5px; font-size: 16px; padding-top: 2px;}";
     css += ".atWill { background-color: #407040; }";
     css += ".encounter { background-color: #892a2a; }";
     css += ".daily { background-color: #1d1070; }";
@@ -133,19 +150,33 @@ PowerPlant.prototype = {
   start: function start(){
     this.addDocumentHead();
     this.addStyle();
-    this.addHeader();
+    if(!this.hideHeader){
+      this.addHeader();
+    }
     this.addCards();
-    this.addFeats();
+    if(!this.hideFeats){
+      this.addFeats();
+    }
     this.finishDocument();
     this.writeOut();
   },
 
   writeOut: function writeOut(){
-    fs.writeFile(this.outputFile, this.html, function(error){
-      if(error){
-        throw error;
-      }
-    });
+    if(this.format === "html"){
+      fs.writeFile(this.outputFile, this.html, function(error){
+        if(error){
+          throw error;
+        }
+      });
+    }
+    else if(this.format === "pdf"){
+      var options = { format : "Letter", type: "pdf" };
+      pdf.create(this.html).toFile(this.outputFile, function(err, result){
+        if(err){
+          throw err;
+        }
+      });
+    }
   }
 };
 
@@ -167,7 +198,7 @@ PowerPlant.prototype = {
     rawData += chunk.toString();
   });
   inputStream.on("end", function(){
-    powerPlant = new PowerPlant(opts.format, JSON.parse(rawData), opts.outputFile);
+    powerPlant = new PowerPlant(opts.format, JSON.parse(rawData), opts.outputFile, opts.hideFeats, opts.hideHeader);
     powerPlant.start();
   });
 
