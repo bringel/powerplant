@@ -36,15 +36,16 @@ PowerPlant.prototype = {
   format:null,
   html: "<!DOCTYPE html><html>",
   data: null,
-  typeToClass : { "At-Will" : "atWill", "Encounter" : "encounter", "Daily" : "daily" },
+  typeToClass : { "At-Will" : "atWill", "Encounter" : "encounter", "Daily" : "daily", "Utility" : "utility" },
   buildCss : function buildCss(){
     var css = "";
-    css += ".body { font-family: Helvetica, sans-serif; }";
-    css += ".card { width: 350px; height: 400px; display: inline-block; }";
-    css += ".header { color: #FFFFFF; }";
+    css += "body { font-family: Helvetica, sans-serif; font-size: 14px;}";
+    css += ".card { width: 350px; height: 400px; display: inline-block; float: left; margin: 1px;}";
+    css += ".header { color: #FFFFFF; padding-left: 5px; padding-right: 5px; font-size: 16px;}";
     css += ".atWill { background-color: #407040; }";
     css += ".encounter { background-color: #892a2a; }";
-    css += ".daily { background-color: #892a2a; }";
+    css += ".daily { background-color: #1d1070; }";
+    css += ".utility { background-color: #2e2e2e; }";
     css += ".left { float: left; }";
     css += ".right { float: right; }";
     css += ".clear {clear: both; }";
@@ -96,7 +97,6 @@ PowerPlant.prototype = {
   },
 
   start: function start(){
-    debugger;
     this.addDocumentHead();
     this.addStyle();
     this.addHeader();
@@ -115,15 +115,7 @@ PowerPlant.prototype = {
 };
 
 (function main(){
-  // var powerplant = new PowerPlant(null,null,null);
-  // var fakeData = "{ \"powers\" : [{\"name\": \"Fading Strike\",\"type\": \"At-Will\",\"level\": 1,\"description\": \"You launch an attack against your foe and then back away for safety\",\"action_type\": \"Standard\",\"effect\": null,\"trigger\": null,\"requirement\": null,\"weapon_type\": \"Melee or Ranged\",\"targets\": \"One creature\",\"attack\": \"Dexterity vs. AC\",\"hit\": \"1[W] + Dexterity modifier damage, and you shift 2 squares to a square that is not adjacent to the target\",\"note\": \"Hunter Fighting Style: When making an opportunity attack, you can use this power in place of a melee basic attack\"}]}";
-  // powerplant.data = JSON.parse(fakeData);
-  //
-  // powerplant.addCards();
-  //
-  // console.log(powerplant.html);
 
-  debugger;
   var opts = nomnom.parse();
 
   var rawData = "";
