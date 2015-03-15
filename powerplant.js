@@ -40,16 +40,21 @@ PowerPlant.prototype = {
   buildCss : function buildCss(){
     var css = "";
     css += "body { font-family: Helvetica, sans-serif; font-size: 14px;}";
-    css += ".card { width: 350px; height: 400px; display: inline-block; float: left; margin: 1px;}";
-    css += ".header { color: #FFFFFF; padding-left: 5px; padding-right: 5px; font-size: 16px;}";
+    css += ".card { width: 300px; height: 350px; display: inline-block; float: left; margin: 1px; page-break-inside: avoid;}";
+    css += ".cardHeader { color: #FFFFFF; padding-left: 5px; padding-right: 5px; font-size: 16px;}";
     css += ".atWill { background-color: #407040; }";
     css += ".encounter { background-color: #892a2a; }";
     css += ".daily { background-color: #1d1070; }";
     css += ".utility { background-color: #2e2e2e; }";
     css += ".left { float: left; }";
     css += ".right { float: right; }";
-    css += ".clear {clear: both; }";
-
+    css += ".clear { clear: both; }";
+    css += ".header { font-size: 18px; clear: both;}";
+    css += ".featTitle { font-size: 16px;}";
+    css += "h1 { font-size: 18px; float: left;}";
+    css += "h2 {font-size: 16px; float: right;}";
+    css += ".featHeader { font-size: 18px;}";
+    css += ".feat { padding: 5px; }";
     return css;
   },
 
@@ -79,19 +84,47 @@ PowerPlant.prototype = {
 
   addCards: function addCards(){
     var power;
+    if(!this.data.powers){ return; }
     for(var i = 0; i < this.data.powers.length; i++){
       power = this.data.powers[i];
       this.html += "<div class=\'card\' id=\'" + this.slug(power.name) + "\'>";
-      this.html += "<div class=\'header " + this.typeToClass[power.type] + "\'><span class=\'left\'><strong>" + power.name + "</strong></span><span class=\'right\'>" + power.level + "</span><div class=\'clear\'></div></div>";
+      this.html += "<div class=\'cardHeader " + this.typeToClass[power.type] + "\'><span class=\'left\'><strong>" + power.name + "</strong></span><span class=\'right\'>" + power.level + "</span><div class=\'clear\'></div></div>";
       this.html += "<div class=\'clear\'><em>" + power.description + "</em></div>";
       this.html += "<div><strong>" + power.type + "</strong></div>";
       this.html += "<div>" + power.action_type + " | <strong>" + power.weapon_type + "</strong></div>";
-      this.html += "<div><strong>" + power.attack + "</strong> | " + power.targets + "</div><br />";
-      this.html += "<div><strong>Requirement</strong>: " + power.requirstrongent + "</div>";
-      this.html += "<div><strong>Trigger</strong>: " + power.trigger + "</div>";
-      this.html += "<div><strong>Effect</strong>: " + power.effect + "</div>";
-      this.html += "<div><strong>Hit</strong>: " + power.hit + "</div><br /><br />";
-      this.html += "<div><em>" + power.note + "</em></div>";
+      if(power.attack && power.targets){
+        this.html += "<div><strong>" + power.attack + "</strong> | " + power.targets + "</div><br />";
+      }
+      if(power.requirement){
+        this.html += "<div><strong>Requirement</strong>: " + power.requiremrent + "</strong></div>";
+      }
+      if(power.trigger){
+        this.html += "<div><strong>Trigger</strong>: " + power.trigger + "</div>";
+      }
+      if(power.effect){
+        this.html += "<div><strong>Effect</strong>: " + power.effect + "</div>";
+      }
+      if(power.hit){
+        this.html += "<div><strong>Hit</strong>: " + power.hit + "</div><br /><br />";
+      }
+      if(power.note){
+        this.html += "<div><em>" + power.note + "</em></div>";
+      }
+      this.html += "</div>";
+    }
+  },
+
+  addFeats: function addFeats(){
+    var feat;
+    this.html += "<div class=\'clear\'></div>";
+    this.html += "<div class=\'featHeader\'><strong>Feats</strong></div>";
+    if(!this.data.feats){ return; }
+    for(var i = 0; i < this.data.feats.length; i++){
+      feat = this.data.feats[i];
+      this.html += "<div class=\'feat\'>";
+      this.html += "<div class=\'featTitle\'><strong>" + feat.name + "</strong></div>";
+      this.html += "<div><em>" + feat.prerequisite + "</em></div>";
+      this.html += "<div>" + feat.benefit + "</div>";
       this.html += "</div>";
     }
   },
@@ -101,6 +134,7 @@ PowerPlant.prototype = {
     this.addStyle();
     this.addHeader();
     this.addCards();
+    this.addFeats();
     this.finishDocument();
     this.writeOut();
   },
