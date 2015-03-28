@@ -70,7 +70,7 @@ PowerPlant.prototype = {
     css += ".featTitle { font-size: 16px;}";
     css += "h1 { font-size: 18px; float: left;}";
     css += "h2 {font-size: 16px; float: right;}";
-    css += ".featHeader { font-size: 18px;}";
+    css += ".featHeader { font-size: 18px; background-color: #ce935f}";
     css += ".feat { padding: 5px; }";
     return css;
   },
@@ -147,6 +147,34 @@ PowerPlant.prototype = {
     }
   },
 
+  addClassFeatures: function addClassFeatures(){
+    var feature;
+    this.html += "<div class=\'clear\'></div>";
+    this.html += "<div class=\'featHeader\'><strong>Class Features</strong></div>";
+    if(!this.data.class_features){ return; }
+    for(var i = 0; i < this.data.class_features.length; i++){
+      feature = this.data.class_features[i];
+      this.html += "<div class=\'feat\'>";
+      this.html += "<div class=\'featTitle\'><strong>" + feature.name + "</strong></div>";
+      this.html += "<div>" + feature.description + "</div>";
+      this.html += "</div>";
+    }
+  },
+
+  addRaceFeatures: function addRaceFeatures(){
+    var feature;
+    this.html += "<div class=\'clear\'></div>";
+    this.html += "<div class=\'featHeader\'><strong>Race Features</strong></div>";
+    if(!this.data.race_features){ return; }
+    for(var i = 0; i < this.data.race_features.length; i++){
+      feature = this.data.race_features[i];
+      this.html += "<div class=\'feat\'>";
+      this.html += "<div class=\'featTitle\'><strong>" + feature.name + "</strong></div>";
+      this.html += "<div>" + feature.description + "</div>";
+      this.html += "</div>";
+    }
+  },
+
   start: function start(){
     this.addDocumentHead();
     this.addStyle();
@@ -157,6 +185,8 @@ PowerPlant.prototype = {
     if(!this.hideFeats){
       this.addFeats();
     }
+    this.addRaceFeatures();
+    this.addClassFeatures();
     this.finishDocument();
     this.writeOut();
   },
@@ -165,7 +195,7 @@ PowerPlant.prototype = {
     var bits = this.outputFile.split(".");
     if(bits.length > 1){
       //get all the pieces except the last to chop off the file extension (if there is one)
-      this.outputFile = bits.slice(0,bits.length -1).concat;
+      this.outputFile = bits.slice(0,bits.length -1).concat();
     }
     if(this.format === "html"){
       this.outputFile += ".html";
