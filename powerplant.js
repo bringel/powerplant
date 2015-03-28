@@ -162,7 +162,13 @@ PowerPlant.prototype = {
   },
 
   writeOut: function writeOut(){
+    var bits = this.outputFile.split(".");
+    if(bits.length > 1){
+      //get all the pieces except the last to chop off the file extension (if there is one)
+      this.outputFile = bits.slice(0,bits.length -1).concat;
+    }
     if(this.format === "html"){
+      this.outputFile += ".html";
       fs.writeFile(this.outputFile, this.html, function(error){
         if(error){
           throw error;
@@ -170,6 +176,7 @@ PowerPlant.prototype = {
       });
     }
     else if(this.format === "pdf"){
+      this.outputFile += ".pdf";
       var options = { format : "Letter", type: "pdf" };
       pdf.create(this.html).toFile(this.outputFile, function(err, result){
         if(err){
